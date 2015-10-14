@@ -120,7 +120,7 @@ public class SystemAdminEJB extends AbstractEJB implements SystemAdminEJBLocal {
         // Use getAllSettings to obtain the cached settings. 
         List<Setting> settings = getAllSettings();
         for (Setting config : settings) {
-            if (config.getName().equals(name) && config.isActive()) {
+            if (config.getName().equals(name)) {
                 result = config;
                 break;
             }

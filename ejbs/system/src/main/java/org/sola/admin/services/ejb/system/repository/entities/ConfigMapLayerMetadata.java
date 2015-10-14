@@ -43,7 +43,9 @@ public class ConfigMapLayerMetadata extends AbstractEntity {
     private String name;
     @Column(name = "value")
     private String value;
-
+    @Column(name = "for_client")
+    private boolean forClient;
+    
     public ConfigMapLayerMetadata() {
         super();
     }
@@ -72,4 +74,11 @@ public class ConfigMapLayerMetadata extends AbstractEntity {
         this.value = value;
     }
 
+    public boolean isForClient() {
+        return forClient;
+    }
+
+    public void setForClient(boolean forClient) {
+        this.forClient = forClient;
+    }
 }

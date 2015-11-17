@@ -5,11 +5,16 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import org.sola.services.common.repository.ChildEntityList;
+import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.Localized;
 import org.sola.services.common.repository.entities.AbstractVersionedEntity;
 
 @Table(schema = "opentenure", name = "form_template")
+@DefaultSorter(sortString = "name desc")
 public class FormTemplate extends AbstractVersionedEntity {
+    
+    public static final String QUERY_GENERATE_FORM_NAME = "select generate_form_name as name from opentenure.generate_form_name()";
+    
     @Id
     @Column
     private String name;

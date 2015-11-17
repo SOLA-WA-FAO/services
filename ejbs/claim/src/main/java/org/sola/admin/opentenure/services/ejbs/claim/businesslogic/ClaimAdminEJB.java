@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.sola.common.RolesConstants;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.ClaimStatus;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldConstraint;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldConstraintOption;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldConstraintType;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldTemplate;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldType;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldValueType;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.FormTemplate;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.SectionTemplate;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
 import org.sola.admin.services.ejbs.admin.businesslogic.AdministratorEJBLocal;
+import org.sola.services.common.EntityAction;
 
 /**
  * Implements methods to manage the claim and it's related objects
@@ -140,6 +146,68 @@ public class ClaimAdminEJB extends AbstractEJB implements ClaimAdminEJBLocal {
     @Override
     @RolesAllowed({RolesConstants.ADMIN_MANAGE_SETTINGS})
     public FormTemplate saveFormTemplate(FormTemplate form) {
+        // Make sure form gets new name with every save
+        HashMap params = new HashMap();
+        params.put(CommonSqlProvider.PARAM_QUERY, FormTemplate.QUERY_GENERATE_FORM_NAME);
+        ArrayList<HashMap> result = getRepository().executeFunction(params);
+
+        form.setName(result.get(0).get("name").toString());
+        form.setLoaded(false);
+        form.setRowId(null);
+        form.setRowVersion(0);
+        form.setEntityAction(EntityAction.INSERT);
+
+        if (form.getSectionTemplateList() != null) {
+            for (SectionTemplate sec : form.getSectionTemplateList()) {
+                sec.setId(UUID.randomUUID().toString());
+                sec.setFormTemplateName(form.getName());
+                sec.setLoaded(false);
+                sec.setRowId(null);
+                sec.setRowVersion(0);
+                sec.setEntityAction(EntityAction.INSERT);
+                if (sec.getFieldTemplateList() != null) {
+                    for (FieldTemplate field : sec.getFieldTemplateList()) {
+                        field.setId(UUID.randomUUID().toString());
+                        field.setSectionTemplateId(sec.getId());
+                        field.setLoaded(false);
+                        field.setRowId(null);
+                        field.setRowVersion(0);
+                        field.setEntityAction(EntityAction.INSERT);
+                        if (field.getFieldConstraintList() != null) {
+                            for (FieldConstraint fc : field.getFieldConstraintList()) {
+                                fc.setId(UUID.randomUUID().toString());
+                                fc.setFieldTemplateId(field.getId());
+                                fc.setLoaded(false);
+                                fc.setRowId(null);
+                                fc.setRowVersion(0);
+                                fc.setEntityAction(EntityAction.INSERT);
+                                if (fc.getFieldConstraintOptionList() != null) {
+                                    for (FieldConstraintOption fco : fc.getFieldConstraintOptionList()) {
+                                        fco.setId(UUID.randomUUID().toString());
+                                        fco.setFieldConstraintId(fc.getId());
+                                        fco.setLoaded(false);
+                                        fco.setRowId(null);
+                                        fco.setRowVersion(0);
+                                        fco.setEntityAction(EntityAction.INSERT);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return getRepository().saveEntity(form);
+    }
+    
+    @Override
+    @RolesAllowed({RolesConstants.ADMIN_MANAGE_SETTINGS})
+    public boolean makeFormDefault(String formName) {
+        FormTemplate form = getRepository().getEntity(FormTemplate.class, formName);
+        if (!form.isIsDefault()) {
+            form.setIsDefault(true);
+            getRepository().saveEntity(form);
+        }
+        return true;
     }
 }

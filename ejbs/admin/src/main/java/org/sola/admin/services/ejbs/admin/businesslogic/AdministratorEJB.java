@@ -612,7 +612,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
     /**
      * Checks if the current user has been assigned one or more of the null null
      * null null null null null null null null null null null null null null
-     * null null null null null null     {@linkplain RolesConstants#ADMIN_MANAGE_SECURITY},
+     * null null null null null null null     {@linkplain RolesConstants#ADMIN_MANAGE_SECURITY},
      * {@linkplain RolesConstants#ADMIN_MANAGE_REFDATA} or
      * {@linkplain RolesConstants#ADMIN_MANAGE_SETTINGS} security roles.
      * <p>
@@ -858,15 +858,26 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
 
     @Override
     public boolean resetCache() {
-        // Try to find cache EJB
-        String ejbLookupName = "java:app/CacheEJBLocal";
+        String ejbLookupName;
+        Object cahceEjb;
+        InitialContext ic = null;
+        
         try {
-            InitialContext ic = new InitialContext();
-            Object cahceEjb = ic.lookup(ejbLookupName);
+            // Try to find cache EJB
+            ejbLookupName = "java:app/CacheEJBLocal";
+            ic = new InitialContext();
+            cahceEjb = ic.lookup(ejbLookupName);
             cahceEjb.getClass().getMethod("clearAll").invoke(cahceEjb);
-            return true;
         } catch (Exception ex) {
-            return false;
+            try {
+                // Try to clear CS cache
+                ejbLookupName = "java:app/CacheCSEJBLocal";
+                cahceEjb = ic.lookup(ejbLookupName);
+                cahceEjb.getClass().getMethod("clearAll").invoke(cahceEjb);
+            } catch (Exception e) {
+                return false;
+            }
         }
+        return true;
     }
 }

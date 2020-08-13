@@ -62,6 +62,8 @@ public class MailerAdmin implements MailerAdminLocal {
     private int sendAttempts2 = 2;
     private int sendAttempts3 = 1;
     private int totalAttempts = 5;
+    
+    private static final String TEXT_HTML = "text/html";
 
     /**
      * Initialization method to setup timer and email service settings.
@@ -165,7 +167,7 @@ public class MailerAdmin implements MailerAdminLocal {
                         // Set body text
                         BodyPart msgBodyPart = new MimeBodyPart();
                         if (htmlFormat) {
-                            msgBodyPart.setContent(StringUtility.empty(email.getBody()), "text/html");
+                            msgBodyPart.setContent(StringUtility.empty(email.getBody()), TEXT_HTML);
                         } else {
                             msgBodyPart.setText(StringUtility.empty(email.getBody()));
                         }
@@ -184,7 +186,7 @@ public class MailerAdmin implements MailerAdminLocal {
                     } else {
                         // Send without attachment
                         if (htmlFormat) {
-                            msg.setContent(StringUtility.empty(email.getBody()), "text/html");
+                            msg.setContent(StringUtility.empty(email.getBody()), TEXT_HTML);
                         } else {
                             msg.setText(StringUtility.empty(email.getBody()));
                         }
@@ -240,7 +242,7 @@ public class MailerAdmin implements MailerAdminLocal {
                             messageBody = messageBody.replace("#{error}", StringUtility.empty(e.getLocalizedMessage()));
 
                             if (htmlFormat) {
-                                msg.setContent(messageBody, "text/html");
+                                msg.setContent(messageBody, TEXT_HTML);
                             } else {
                                 msg.setText(messageBody);
                             }

@@ -74,6 +74,9 @@ import org.sola.services.common.repository.RepositoryUtility;
 @EJB(name = "java:app/AdministratorEJBLocal", beanInterface = AdministratorEJBLocal.class)
 public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLocal {
 
+    private static final String PROCESS_LOG = "path-to-process-log";
+    private static final String PROCESS_NAME = "process_name";
+        
     @EJB
     private SystemAdminEJBLocal systemEJB;
 
@@ -670,7 +673,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
         commands[4] = dumpToFile ? "Y" : "N";
         commands[5] = processName;
         commands[6] = systemEJB.getSetting("path-to-backup", "");
-        commands[7] = systemEJB.getSetting("path-to-process-log", "");
+        commands[7] = systemEJB.getSetting(PROCESS_LOG, "");
         try {
             Runtime.getRuntime().exec(commands);
         } catch (IOException ex) {
@@ -700,7 +703,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
         commands[3] = extractedFile.isEmpty() ? "N/A" : extractedFile;
         commands[4] = processName;
         commands[5] = systemEJB.getSetting("path-to-backup", "");
-        commands[6] = systemEJB.getSetting("path-to-process-log", "");
+        commands[6] = systemEJB.getSetting(PROCESS_LOG, "");
         try {
             Runtime.getRuntime().exec(commands);
         } catch (IOException ex) {
@@ -766,7 +769,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
         String sqlStatement = "select system.process_progress_start(#{process_name}, #{maximum_value}) as vl";
         Map params = new HashMap();
         params.put(CommonSqlProvider.PARAM_QUERY, sqlStatement);
-        params.put("process_name", processName);
+        params.put(PROCESS_NAME, processName);
         params.put("maximum_value", maximumValue);
         getRepository().getScalar(Void.class, params);
     }
@@ -787,7 +790,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
         }
         Map params = new HashMap();
         params.put(CommonSqlProvider.PARAM_QUERY, sqlStatement);
-        params.put("process_name", processName);
+        params.put(PROCESS_NAME, processName);
         return getRepository().getScalar(Integer.class, params);
     }
 
@@ -802,7 +805,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
         String sqlStatement = "select system.process_progress_set(#{process_name}, #{progress_value}) as vl";
         Map params = new HashMap();
         params.put(CommonSqlProvider.PARAM_QUERY, sqlStatement);
-        params.put("process_name", processName);
+        params.put(PROCESS_NAME, processName);
         params.put("progress_value", progressValue);
         getRepository().getScalar(Void.class, params);
     }
@@ -817,7 +820,7 @@ public class AdministratorEJB extends AbstractEJB implements AdministratorEJBLoc
     public String getProcessLog(String processName) {
         processName = processName + ".log";
         String logFilename = FileUtility.sanitizeFileName(processName, true);
-        String pathToProcessLog = systemEJB.getSetting("path-to-process-log", "");
+        String pathToProcessLog = systemEJB.getSetting(PROCESS_LOG, "");
         String fullPathToLog = String.format("%s/%s", pathToProcessLog, logFilename);
         try {
             return FileUtils.readFileToString(new File(fullPathToLog));

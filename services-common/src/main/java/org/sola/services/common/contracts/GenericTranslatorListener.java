@@ -49,6 +49,7 @@ public class GenericTranslatorListener implements DozerEventListener {
      */
     @Override
     public void mappingStarted(DozerEvent event) {
+        // overridden method
     }
 
     /**
@@ -58,6 +59,7 @@ public class GenericTranslatorListener implements DozerEventListener {
      */
     @Override
     public void preWritingDestinationValue(DozerEvent event) {
+        // overridden method
     }
 
     /**
@@ -89,5 +91,6 @@ public class GenericTranslatorListener implements DozerEventListener {
      */
     @Override
     public void mappingFinished(DozerEvent event) {
+        // overridden method
     }
 }

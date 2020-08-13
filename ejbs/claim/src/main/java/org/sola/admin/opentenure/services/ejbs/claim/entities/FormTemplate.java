@@ -26,8 +26,6 @@ public class FormTemplate extends AbstractVersionedEntity {
     @ChildEntityList(parentIdField = "formTemplateName", cascadeDelete = true)
     private List<SectionTemplate> sectionTemplateList;
     
-    public FormTemplate(){
-    }
     
     public String getDisplayName() {
         return displayName;

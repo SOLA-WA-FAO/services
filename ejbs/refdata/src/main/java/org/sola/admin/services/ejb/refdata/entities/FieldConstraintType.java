@@ -16,6 +16,4 @@ public class FieldConstraintType extends AbstractCodeEntity {
     public static final String TYPE_OPTION = "OPTION";
     public static final String TYPE_REGEXP = "REGEXP";
 
-    public FieldConstraintType() {
-    }
 }

@@ -44,7 +44,5 @@ public class ServiceStatusType extends AbstractCodeEntity {
     public static final String STATUS_CANCELLED = "cancelled";
     public static final String STATUS_PENDING = "pending";
 
-    public ServiceStatusType() {
-    }
     
 }

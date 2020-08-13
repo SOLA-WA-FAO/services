@@ -25,9 +25,6 @@ public class QueryField extends AbstractEntity {
     @Localized
     private String displayValue;
     
-    public QueryField(){
-        
-    }
 
     public String getQueryName() {
         return queryName;

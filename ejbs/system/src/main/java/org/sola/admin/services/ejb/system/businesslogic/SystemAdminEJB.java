@@ -44,9 +44,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
+import org.sola.admin.services.ejb.system.repository.entities.Project;
+import org.sola.admin.services.ejb.system.repository.entities.ReportDescription;
 import org.sola.common.ConfigConstants;
 import org.sola.common.RolesConstants;
 import org.sola.common.SOLAException;
@@ -456,5 +458,56 @@ public class SystemAdminEJB extends AbstractEJB implements SystemAdminEJBLocal {
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, DbInfo.QUERY);
         return getRepository().getEntity(DbInfo.class, params);
+    }
+    
+    /**
+     * Returns all reports
+     *
+     * @param locale Locale code
+     * @return
+     */
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    @Override
+    public List<ReportDescription> getAllReports(String locale) {
+        if (locale != null) {
+            Map params = new HashMap<String, Object>();
+            params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, locale);
+            return getRepository().getEntityList(ReportDescription.class, params);
+        }
+        return getRepository().getEntityList(ReportDescription.class);
+    }
+
+    /**
+     * Returns report by ID
+     *
+     * @param id Report ID
+     * @param locale Locale code
+     * @return
+     */
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    @Override
+    public ReportDescription getReportById(String id, String locale) {
+        if (locale != null) {
+            return getRepository().getEntity(ReportDescription.class, id, locale);
+        }
+        return getRepository().getEntity(ReportDescription.class, id);
+    }
+    
+    /**
+     * Saves provide report
+     *
+     * @param report Report object
+     * @return
+     */
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    @Override
+    public ReportDescription saveReport(ReportDescription report) {
+        return getRepository().saveEntity(report);
+    }
+    
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SETTINGS)
+    @Override
+    public Project saveProject(Project project) {
+        return getRepository().saveEntity(project);
     }
 }

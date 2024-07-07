@@ -37,10 +37,12 @@ import org.sola.admin.services.ejb.search.repository.entities.BrSearchResult;
 import org.sola.admin.services.ejb.search.repository.entities.UserSearchResult;
 import org.sola.admin.services.ejb.search.repository.entities.ConfigMapLayer;
 import java.util.*;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
+import org.sola.admin.services.ejb.search.repository.entities.ProjectSearchResult;
 import org.sola.common.RolesConstants;
+import org.sola.common.StringUtility;
 import org.sola.services.common.ejbs.AbstractEJB;
 import org.sola.services.common.repository.CommonSqlProvider;
 
@@ -79,11 +81,15 @@ public class SearchAdminEJB extends AbstractEJB implements SearchAdminEJBLocal {
      */
     @Override
     @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
-    public List<UserSearchResult> searchUsers(UserSearchParams searchParams) {
+    public List<UserSearchResult> searchUsers(UserSearchParams searchParams, String lang) {
         if (searchParams.getGroupId() == null) {
             searchParams.setGroupId("");
         }
 
+        if (searchParams.getProjectId()== null) {
+            searchParams.setProjectId("");
+        }
+        
         if (searchParams.getUserName() == null) {
             searchParams.setUserName("");
         }
@@ -98,10 +104,12 @@ public class SearchAdminEJB extends AbstractEJB implements SearchAdminEJBLocal {
 
         Map params = new HashMap<String, Object>();
         params.put(CommonSqlProvider.PARAM_QUERY, UserSearchResult.QUERY_ADVANCED_USER_SEARCH);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
         params.put("userName", searchParams.getUserName());
         params.put("firstName", searchParams.getFirstName());
         params.put("lastName", searchParams.getLastName());
         params.put("groupId", searchParams.getGroupId());
+        params.put("projectId", searchParams.getProjectId());
         return getRepository().getEntityList(UserSearchResult.class, params);
     }
 
@@ -205,5 +213,32 @@ public class SearchAdminEJB extends AbstractEJB implements SearchAdminEJBLocal {
         params.put("technicalTypeCode", searchParams.getTechnicalTypeCode());
         params.put("targetCode", searchParams.getTargetCode());
         return getRepository().getEntityList(BrSearchResult.class, params);
+    }
+    
+    /**
+     * Returns list of all projects
+     *
+     * @param lang Language code
+     * @return
+     */
+    @Override
+    @RolesAllowed(RolesConstants.ADMIN_MANAGE_SECURITY)
+    public List<ProjectSearchResult> getAllProjects(String lang) {
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, lang);
+        return getRepository().getEntityList(ProjectSearchResult.class, params);
+    }
+    
+    @Override
+    public List<ConfigMapLayer> getMapLayersByProject(String projectId, String languageCode){
+        if(StringUtility.isEmpty(projectId)){
+            return null;
+        }
+        
+        Map params = new HashMap<String, Object>();
+        params.put(CommonSqlProvider.PARAM_WHERE_PART, ConfigMapLayer.WHERE_BY_PROJECT_ID);
+        params.put(CommonSqlProvider.PARAM_LANGUAGE_CODE, languageCode);
+        params.put(ConfigMapLayer.PARAM_PROJECT_ID, projectId);
+        return getRepository().getEntityList(ConfigMapLayer.class, params);
     }
 }

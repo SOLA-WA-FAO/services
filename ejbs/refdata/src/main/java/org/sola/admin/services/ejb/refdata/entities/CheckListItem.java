@@ -1,7 +1,7 @@
 package org.sola.admin.services.ejb.refdata.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
 

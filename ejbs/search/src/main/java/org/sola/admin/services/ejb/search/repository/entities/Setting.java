@@ -31,8 +31,8 @@
  */
 package org.sola.admin.services.ejb.search.repository.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 /**

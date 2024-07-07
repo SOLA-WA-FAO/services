@@ -28,7 +28,7 @@
 package org.sola.admin.services.ejb.cache.businesslogic;
 
 import java.util.List;
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  *

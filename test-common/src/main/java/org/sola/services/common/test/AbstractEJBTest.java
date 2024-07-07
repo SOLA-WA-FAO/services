@@ -34,30 +34,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.ejb.embeddable.EJBContainer;
+import jakarta.ejb.embeddable.EJBContainer;
+import jakarta.transaction.UserTransaction;
 import javax.naming.NamingException;
-import javax.transaction.UserTransaction;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 /**
  * Parent class for EJB Test classes.
  * <p>
- * Encapsulates setup and configuration of the embedded Glassfish container for the purposes of
- * testing EJBs. To use this class, create a JUnit 4 test class for your EJB, then extend
- * that class with this one. This class defines @BeforeClass and @AfterClass annotations
- * to configure the embedded Glassfish server and to start it running.
- * These annotations should be removed from descendent test classes to avoid overriding the
- * methods in this class. 
+ * Encapsulates setup and configuration of the embedded Glassfish container for
+ * the purposes of testing EJBs. To use this class, create a JUnit 4 test class
+ * for your EJB, then extend that class with this one. This class defines
+ * @BeforeClass and @AfterClass annotations to configure the embedded Glassfish
+ * server and to start it running. These annotations should be removed from
+ * descendent test classes to avoid overriding the methods in this class.
  * </p>
  * <p>
- * Note whenever a change to the Glassfish configuration occurs, the CONFIG_VERSION_NUMBER
- * constant should be updated accordingly. This is used to prevent unnecessary downloads of the
- * configuration data to the temp directory. Old versions of the configuration will be removed. 
+ * Note whenever a change to the Glassfish configuration occurs, the
+ * CONFIG_VERSION_NUMBER constant should be updated accordingly. This is used to
+ * prevent unnecessary downloads of the configuration data to the temp
+ * directory. Old versions of the configuration will be removed.
  * </p>
- * @see SOLA Wiki <a href="http://www.flossola.org/wiki/Unit_testing_with_Embedded_Glassfish">
+ *
+ * @see SOLA Wiki
+ * <a href="http://www.flossola.org/wiki/Unit_testing_with_Embedded_Glassfish">
  * Unit Testing with Embedded Glassfish</a>
- * 
+ *
  * @author soladev
  * @since 15-May-2011
  *
@@ -73,19 +76,23 @@ public abstract class AbstractEJBTest {
      */
     protected static String GLASSFISH_RESOURCE_NAME = "glassfish";
     private static String configVersion = "v001";
+    private static final String CLASSES = "classes";
     private static EJBContainer container = null;
     private static Map properties = null;
     private static Boolean skipTests = null;
     private ProgrammaticLogin pgLogin;
 
     /**
-     * Checks the SOLA_OPTS environment variable to determine if the Integration Tests such as
-     * those using Embedded Glassfish should be skipped or not. 
-     * <p> To set this environment variable in Ubuntu, add the following export to the 
-     * ~/.gnomerc file: {@code export SOLA_OPTS=SkipIntTests} You may need to create
-     * the ~/.gnomerc file if it doesn't exist.</p><p>
-     * This variable is used by Bamboo to avoid running Integration tests during the automated build process. 
-     * @return 
+     * Checks the SOLA_OPTS environment variable to determine if the Integration
+     * Tests such as those using Embedded Glassfish should be skipped or not.
+     * <p>
+     * To set this environment variable in Ubuntu, add the following export to
+     * the ~/.gnomerc file: {@code export SOLA_OPTS=SkipIntTests} You may need
+     * to create the ~/.gnomerc file if it doesn't exist.</p><p>
+     * This variable is used by Bamboo to avoid running Integration tests during
+     * the automated build process.
+     *
+     * @return
      */
     protected static boolean skipIntegrationTest() {
         if (skipTests == null) {
@@ -113,6 +120,7 @@ public abstract class AbstractEJBTest {
      * <p>
      * If a deletion fails, the method stops and returns false.
      * </p>
+     *
      * @param dir
      * @return true if all deletions were successful.
      */
@@ -132,6 +140,7 @@ public abstract class AbstractEJBTest {
 
     /**
      * Returns the EJBContainer
+     *
      * @return
      */
     protected static EJBContainer getContainer() {
@@ -141,11 +150,13 @@ public abstract class AbstractEJBTest {
     /**
      * Obtains the properties to use for the embedded Glassfish container.
      * <p>
-     * When creating the properties Map, the installation.root and APP_NAME properties are 
-     * set. To add or alter these properties before the container is instantiated override
-     * the reconfigureContainerProperties method in descendent classes. 
+     * When creating the properties Map, the installation.root and APP_NAME
+     * properties are set. To add or alter these properties before the container
+     * is instantiated override the reconfigureContainerProperties method in
+     * descendent classes.
      * </p>
-     * @return The Map of properties. 
+     *
+     * @return The Map of properties.
      */
     protected static Map getProperties() {
         if (properties == null) {
@@ -162,14 +173,15 @@ public abstract class AbstractEJBTest {
     /**
      * Empty method that allows the container properties to be reconfigured.
      * <p>
-     * If further configuration of the container properties is required, override this method 
-     * in descendent classes and update the Properties map directly
-     * e.g. <pre><code>getProperties().put(PropertyName, PropertyValue);</code></pre>
+     * If further configuration of the container properties is required,
+     * override this method in descendent classes and update the Properties map
+     * directly e.g.
+     * <pre><code>getProperties().put(PropertyName, PropertyValue);</code></pre>
      * </p>
      * <p>
-     * By default embedded Glassfish will search for and load any EJB's in the jar that contains 
-     * the test class as well as any jar this jar is dependent on. Other EJB's can also be 
-     * loaded by specifying the MODULES property. 
+     * By default embedded Glassfish will search for and load any EJB's in the
+     * jar that contains the test class as well as any jar this jar is dependent
+     * on. Other EJB's can also be loaded by specifying the MODULES property.
      * </p>
      * <p>
      * e.g. To load EJB's from the ShoppingCart and OnlineCatalog jars
@@ -181,26 +193,26 @@ public abstract class AbstractEJBTest {
      * </code></pre>
      * </p>
      * <p>
-     * Note that loading modules in this manner will probably require explicitly loading the jar's 
-     * containing the test class as well.
+     * Note that loading modules in this manner will probably require explicitly
+     * loading the jar's containing the test class as well.
      * </p>
      */
     protected static void reconfigureContainerProperties() {
     }
 
     /**
-     * Gets the Glassfish configuration location. 
+     * Gets the Glassfish configuration location.
      * <p>
-     * Determines where the Glassfish configuration is located. If its not in a temp location
-     * this method extracts the Glassfish configuration from the TestUtilities JAR file and saves it
-     * there.
+     * Determines where the Glassfish configuration is located. If its not in a
+     * temp location this method extracts the Glassfish configuration from the
+     * TestUtilities JAR file and saves it there.
      * </p>
      * <p>
-     * If the Glassfish configuration is updated, change the name of the temp directory version 
-     * (e.g. TestUtilities/v001/ to TestUtilities/v002/) to ensure the new configuration is used by
-     * everyone.
+     * If the Glassfish configuration is updated, change the name of the temp
+     * directory version (e.g. TestUtilities/v001/ to TestUtilities/v002/) to
+     * ensure the new configuration is used by everyone.
      * </p>
-     * 
+     *
      * @return The location of the glassfish configuration
      */
     protected static String getGlassfishConfig() {
@@ -256,33 +268,38 @@ public abstract class AbstractEJBTest {
     }
 
     /**
-     * Obtains a reference to the named EJB class running in the embedded Glassfish container.
+     * Obtains a reference to the named EJB class running in the embedded
+     * Glassfish container.
      * <p>
-     * This method assumes the EJB being requested is in the same jar as the test class and uses
-     * "classes" as the module name. If the "classes" module name results in a NamingException, the
-     * lookup is retried with the "classesejb" module name. This appears to be the module name used
-     * when trying to debug the test. 
+     * This method assumes the EJB being requested is in the same jar as the
+     * test class and uses CLASSES as the module name. If the CLASSES module
+     * name results in a NamingException, the lookup is retried with the
+     * "classesejb" module name. This appears to be the module name used when
+     * trying to debug the test.
      * </p>
+     *
      * @param ejbClassName The class name of the EJB to get
      * @return A reference to the EJB or an exception
      * @throws NamingException If the EJB name cannot be found
      */
     protected Object getEJBInstance(String ejbClassName) throws Exception {
-        return getEJBInstance("classes", ejbClassName);
+        return getEJBInstance(CLASSES, ejbClassName);
     }
 
     /**
-     * Obtains a reference to the name EJB class running in the embedded Glassfish container.
-     * <p>
-     * If the EJB is not in the same Jar as the test class, it will be necessary to specify the
-     * module name for the EJB. This should be the name of the Jar containing the target EJB. Check
-     * the JNDI names in the Output window for the EJB when it is loaded into the embedded 
+     * Obtains a reference to the name EJB class running in the embedded
      * Glassfish container.
+     * <p>
+     * If the EJB is not in the same Jar as the test class, it will be necessary
+     * to specify the module name for the EJB. This should be the name of the
+     * Jar containing the target EJB. Check the JNDI names in the Output window
+     * for the EJB when it is loaded into the embedded Glassfish container.
      * </p>
      * <p>
      * Note this method appends the name parts together as follows
      * <pre><code>"java:global/solatest/" + moduleName + "/" + ejbClassName;</code></pre>
      * </p>
+     *
      * @param moduleName The name of the module prefixing the EJB
      * @param ejbClassName The class name of the EJB to get
      * @return A reference to the EJB or an exception
@@ -294,8 +311,8 @@ public abstract class AbstractEJBTest {
         moduleNames.add(moduleName);
         moduleNames.add("sola-" + ejbClassName.substring(0, (ejbClassName.length() - 3)).toLowerCase());
         moduleNames.add("classesejb");
-        if (!moduleName.equals("classes")) {
-            moduleNames.add("classes");
+        if (!moduleName.equals(CLASSES)) {
+            moduleNames.add(CLASSES);
         }
 
         Object result = null;
@@ -324,10 +341,12 @@ public abstract class AbstractEJBTest {
      * Obtains a UserTransaction object from the embedded Glassfish server.
      * <p>
      * Obtains the object by performing a JNDI name lookup. The transaction
-     * object must then be managed manually by the calling code. 
+     * object must then be managed manually by the calling code.
      * </p>
+     *
      * @return The UserTransaction
-     * @throws NamingException If the JNDI name for the UserTransaction is not recognized
+     * @throws NamingException If the JNDI name for the UserTransaction is not
+     * recognized
      */
     protected UserTransaction getUserTransaction() throws NamingException {
         return (UserTransaction) getContainer().getContext().lookup("java:comp/UserTransaction");
@@ -335,43 +354,48 @@ public abstract class AbstractEJBTest {
 
     /**
      * Logs the named user into Glassfish.
+     *
      * @param userName Username used to login
      * @param password User password
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     protected boolean login(String userName, String password) throws Exception {
-        if(pgLogin==null){
+        if (pgLogin == null) {
             pgLogin = new ProgrammaticLogin();
-        }else{
+        } else {
             pgLogin.logout();
         }
         return pgLogin.login(userName, password.toCharArray(), "SolaRealm", true);
     }
-    
+
     /**
      * Logs out user.
+     *
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     protected boolean logout() throws Exception {
-        if(pgLogin!=null){
+        if (pgLogin != null) {
             return pgLogin.logout();
         }
         return true;
     }
 
-    /** 
-     * Checks if the specified exception type exists in the Cause
-     * list for the exception. 
+    /**
+     * Checks if the specified exception type exists in the Cause list for the
+     * exception.
      * <p>
-     * When an exception occurs in an EJB, it is wrapped by an EJB rollback exception or 
-     * equivalent. This method can be used to determine if the exception was caused by
-     * a specific exception (e.g. OptimisiticLockException). 
+     * When an exception occurs in an EJB, it is wrapped by an EJB rollback
+     * exception or equivalent. This method can be used to determine if the
+     * exception was caused by a specific exception (e.g.
+     * OptimisiticLockException).
      * </p>
+     *
      * @param t The exception that is being checked
-     * @param causeType The type of exception to check for. 
-     * @return true if the causeType is found in the list of causes for the exception. 
+     * @param causeType The type of exception to check for.
+     * @return true if the causeType is found in the list of causes for the
+     * exception.
      */
     protected boolean hasCause(Throwable t, Class causeType) {
         boolean result = false;
@@ -385,29 +409,33 @@ public abstract class AbstractEJBTest {
         return result;
     }
 
-    /** 
+    /**
      * @BeforeClass test method that creates the embedded Glassfish container
-     * @throws Exception 
+     * @throws Exception
+     * @deprecated
      */
+    // TODO: Switch on GlassFish 7.0.13
     @BeforeClass
     public static void setUpClass() throws Exception {
-        if (skipIntegrationTest()) {
+        /*if (skipIntegrationTest()) {
             System.out.println("Skipping GF Tests as SOLA_OPTS.SkipGFTests environment "
                     + "variable is set.");
         } else {
             System.out.println("Current User Directory = " + System.getProperty("user.dir"));
             setContainer(createContainer());
-        }
+        }*/
     }
 
     /**
      * @AfterClass test method that closes the embedded Glassfish
-     * @throws Exception 
+     * @throws Exception
+     * @deprecated
      */
+    // TODO: Switch on GlassFish 7.0.13
     @AfterClass
     public static void tearDownClass() throws Exception {
-        if (getContainer() != null) {
+        /*if (getContainer() != null) {
             getContainer().close();
-        }
+        }*/
     }
 }

@@ -27,10 +27,11 @@
  */
 package org.sola.admin.services.ejb.search.repository.entities;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.sola.services.common.repository.CommonSqlProvider;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 
 @Table(name = "appuser", schema = "system")
@@ -41,8 +42,12 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
             + "(SELECT string_agg(tmp.name, ', ') FROM "
             + "(SELECT name FROM system.appgroup g INNER JOIN system.appuser_appgroup ug2 "
             + "ON g.id = ug2.appgroup_id WHERE ug2.appuser_id = u.id ORDER BY g.name) tmp "
-            + ") AS groups_list "
-            + "FROM system.appuser u LEFT JOIN system.appuser_appgroup ug ON u.id = ug.appuser_id ";
+            + ") AS groups_list, "
+            + "(SELECT string_agg(tmp2.display_name, ', ') FROM "
+            + "(SELECT get_translation(p.display_name, #{" + CommonSqlProvider.PARAM_LANGUAGE_CODE + "}) as display_name FROM system.project p INNER JOIN system.project_appuser up2 "
+            + "ON p.id = up2.project_id WHERE up2.appuser_id = u.id ORDER BY p.display_name) tmp2 "
+            + ") AS projects_list "
+            + "FROM (system.appuser u LEFT JOIN system.appuser_appgroup ug ON u.id = ug.appuser_id) LEFT JOIN system.project_appuser up on u.id = up.appuser_id ";
     
     public static final String QUERY_ACTIVE_USERS = UserSearchResult.SELECT_QUERY 
             + "WHERE active = 't' ORDER BY u.last_name";
@@ -51,6 +56,7 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
             + "WHERE POSITION(LOWER(COALESCE(#{userName}, '')) IN LOWER(COALESCE(username, ''))) > 0 "
             + "AND POSITION(LOWER(COALESCE(#{firstName}, '')) IN LOWER(COALESCE(first_name, ''))) > 0 "
             + "AND POSITION(LOWER(COALESCE(#{lastName}, '')) IN LOWER(COALESCE(last_name, ''))) > 0 "
+            + "AND (up.project_id = #{projectId} OR #{projectId} = '') "
             + "AND (ug.appgroup_id = #{groupId} OR #{groupId} = '') ORDER BY u.username";
     
     @Id
@@ -68,6 +74,8 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
     private String description;
     @Column(name = "groups_list")
     private String groupsList;
+    @Column(name = "projects_list")
+    private String projectsList;
 
     public UserSearchResult() {
         super();
@@ -127,5 +135,13 @@ public class UserSearchResult extends AbstractReadOnlyEntity {
 
     public void setGroupsList(String groupsList) {
         this.groupsList = groupsList;
+    }
+
+    public String getProjectsList() {
+        return projectsList;
+    }
+
+    public void setProjectsList(String projectsList) {
+        this.projectsList = projectsList;
     }
 }

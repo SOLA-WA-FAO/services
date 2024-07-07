@@ -1,7 +1,7 @@
 package org.sola.admin.opentenure.services.ejbs.claim.businesslogic;
 
 import java.util.List;
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.ClaimStatus;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldConstraintType;
 import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldType;

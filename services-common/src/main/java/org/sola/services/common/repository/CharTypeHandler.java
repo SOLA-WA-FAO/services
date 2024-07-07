@@ -35,7 +35,6 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 
@@ -55,6 +54,7 @@ import org.apache.ibatis.type.TypeHandler;
  * data type and not the primitive char data type. 
  * @author soladev
  */
+
 public class CharTypeHandler implements TypeHandler {
 
     @Override
@@ -72,6 +72,17 @@ public class CharTypeHandler implements TypeHandler {
     public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
         String s = cs.getString(columnIndex);
         if (cs.wasNull()) {
+            return null;
+        } else {
+            Character c = s.charAt(0);
+            return new Character(c);
+        }
+    }
+    
+    @Override
+    public Object getResult(ResultSet rs, int i) throws SQLException {
+        String s = rs.getString(i);
+        if (rs.wasNull()) {
             return null;
         } else {
             Character c = s.charAt(0);

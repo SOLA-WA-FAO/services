@@ -1,7 +1,7 @@
 package org.sola.admin.services.ejb.refdata.entities;
 
 import java.util.List;
-import javax.persistence.Table;
+import jakarta.persistence.Table;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.DefaultSorter;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;

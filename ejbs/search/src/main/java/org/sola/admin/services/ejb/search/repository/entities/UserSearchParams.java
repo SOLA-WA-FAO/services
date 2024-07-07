@@ -34,6 +34,7 @@ public class UserSearchParams  extends AbstractReadOnlyEntity {
     private String userName;
     private String firstName;
     private String lastName;
+    private String projectId;
     
     public UserSearchParams(){
         super();
@@ -70,5 +71,12 @@ public class UserSearchParams  extends AbstractReadOnlyEntity {
     public void setUserName(String userName) {
         this.userName = userName;
     }
-    
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+    }
 }

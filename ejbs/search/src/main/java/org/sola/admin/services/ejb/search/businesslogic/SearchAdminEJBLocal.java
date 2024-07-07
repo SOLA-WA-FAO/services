@@ -35,7 +35,8 @@ import org.sola.admin.services.ejb.search.repository.entities.ConfigMapLayer;
 import org.sola.admin.services.ejb.search.repository.entities.UserSearchResult;
 import java.util.HashMap;
 import java.util.List;
-import javax.ejb.Local;
+import jakarta.ejb.Local;
+import org.sola.admin.services.ejb.search.repository.entities.ProjectSearchResult;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 
 /**
@@ -68,14 +69,25 @@ public interface SearchAdminEJBLocal extends AbstractEJBLocal {
     List<UserSearchResult> getActiveUsers();
 
     /**
-     * See {@linkplain SearchEJB#searchUsers(org.sola.services.ejb.search.repository.entities.UserSearchParams)
-     * SearchEJB.searchUsers}.
+     * See {@linkplain SearchAdminEJB#searchUsers(org.sola.services.ejb.search.repository.entities.UserSearchParams, java.lang.String)
+     * SearchAdminEJB.searchUsers}.
      */
-    List<UserSearchResult> searchUsers(UserSearchParams searchParams);
+    List<UserSearchResult> searchUsers(UserSearchParams searchParams, String lang);
 
     /**
      * See {@linkplain SearchEJB#searchBr(org.sola.services.ejb.search.repository.entities.BrSearchParams, java.lang.String)
      * SearchEJB.searchBr}.
      */
     List<BrSearchResult> searchBr(BrSearchParams searchParams, String lang);
+    
+    /**
+     * See {@linkplain SearchAdminEJB#getAllProjects(String lang)}.
+     */
+    List<ProjectSearchResult> getAllProjects(String lang);
+    
+    /**
+     * See {@linkplain SearchAdminEJB#getMapLayersByProject(java.lang.String, java.lang.String)
+     * SearchAdminEJB.getMapLayersByProject}.
+     */
+    List<ConfigMapLayer> getMapLayersByProject(String projectId, String languageCode);
 }

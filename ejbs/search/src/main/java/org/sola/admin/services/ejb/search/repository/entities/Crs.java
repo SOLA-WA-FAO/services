@@ -31,10 +31,10 @@
  */
 package org.sola.admin.services.ejb.search.repository.entities;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.sola.services.common.repository.AccessFunctions;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 

@@ -1,6 +1,6 @@
 package org.sola.admin.services.ejb.system.repository.entities;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import org.sola.common.ConfigConstants;
 import org.sola.services.common.repository.entities.AbstractEntity;
 

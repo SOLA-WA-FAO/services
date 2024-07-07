@@ -38,12 +38,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.Configuration;
 import org.sola.common.ConfigConstants;
@@ -64,7 +63,6 @@ import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.Role
 import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.User;
 import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.Group;
 import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.UserGroup;
-import org.sola.services.common.repository.RepositoryUtility;
 
 /**
  * Contains business logic methods to administer system settings, users and

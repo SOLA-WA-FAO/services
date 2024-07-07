@@ -32,10 +32,10 @@
 package org.sola.admin.services.ejb.search.repository.entities;
 
 import java.util.List;
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Cacheable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.sola.services.common.repository.ChildEntityList;
 import org.sola.services.common.repository.Localized;
 import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
@@ -49,6 +49,9 @@ import org.sola.services.common.repository.entities.AbstractReadOnlyEntity;
 public class ConfigMapLayer extends AbstractReadOnlyEntity {
 
     public static final String QUERY_ORDER_BY = "item_order";
+    public static final String PARAM_PROJECT_ID = "project_id";
+    public static final String WHERE_BY_PROJECT_ID = "name in (select layer_id from system.project_map_layer where project_id = #{" + PARAM_PROJECT_ID + "})";
+    
     @Id
     @Column(name = "name")
     private String id;

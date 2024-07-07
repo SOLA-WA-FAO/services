@@ -5,18 +5,18 @@
     <parent>
         <artifactId>sola-admin-ejbs</artifactId>
         <groupId>org.fao.sola.admin.services</groupId>
-        <version>1504a</version>
+        <version>2024a</version>
     </parent>
     <groupId>org.fao.sola.admin.services.ejbs</groupId>
     <artifactId>sola-admin-search</artifactId>
-    <version>1504a</version>
+    <version>2024a</version>
     <packaging>ejb</packaging>
     <name>EJB Admin Search</name>
      <dependencies>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.0.6</version>
+            <version>${mybatis.version}</version>
         </dependency>
     </dependencies>
 </project>

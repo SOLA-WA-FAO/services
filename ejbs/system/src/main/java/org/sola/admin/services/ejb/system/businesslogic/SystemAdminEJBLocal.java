@@ -28,7 +28,7 @@
 package org.sola.admin.services.ejb.system.businesslogic;
 
 import java.util.List;
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 import org.sola.services.common.ejbs.AbstractEJBLocal;
 import org.sola.admin.services.ejb.system.repository.entities.Br;
 import org.sola.admin.services.ejb.system.repository.entities.BrReport;
@@ -36,7 +36,9 @@ import org.sola.admin.services.ejb.system.repository.entities.ConfigMapLayer;
 import org.sola.admin.services.ejb.system.repository.entities.Crs;
 import org.sola.admin.services.ejb.system.repository.entities.DbInfo;
 import org.sola.admin.services.ejb.system.repository.entities.EmailTask;
+import org.sola.admin.services.ejb.system.repository.entities.Project;
 import org.sola.admin.services.ejb.system.repository.entities.Query;
+import org.sola.admin.services.ejb.system.repository.entities.ReportDescription;
 import org.sola.admin.services.ejb.system.repository.entities.Setting;
 
 /**
@@ -160,4 +162,32 @@ public interface SystemAdminEJBLocal extends AbstractEJBLocal {
     
     /** See {@link SystemEJB#getDatabaseInfo()}*/
     DbInfo getDatabaseInfo();
+    
+    /**
+     * See {@linkplain SystemAdminEJB#getAllReports(java.lang.String)
+     * SystemAdminEJB.getAllReports}
+     * @param locale
+     * @return 
+     */
+    List<ReportDescription> getAllReports(String locale);
+
+    /**
+     * See {@linkplain SystemAdminEJB#getReportById(java.lang.String, java.lang.String)
+     * SystemAdminEJB.getReportById}
+     */
+    ReportDescription getReportById(String id, String locale);
+    
+    /**
+     * See {@linkplain SystemAdminEJB#saveReport(org.sola.admin.services.ejb.system.repository.entities.ReportDescription)
+     * SystemAdminEJB.saveReport}
+     */
+    ReportDescription saveReport(ReportDescription report);
+    
+    /**
+     * Saves project
+     *
+     * @param project Project object to save
+     * @return
+     */
+    Project saveProject(Project project);
 }

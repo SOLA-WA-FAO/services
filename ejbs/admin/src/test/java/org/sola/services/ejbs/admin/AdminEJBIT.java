@@ -31,7 +31,7 @@ import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.Lang
 import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.UserGroup;
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.UserTransaction;
+import jakarta.transaction.UserTransaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
